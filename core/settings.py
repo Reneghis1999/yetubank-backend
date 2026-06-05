@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'users',
+    'accounts',
+    'transactions',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +127,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+
+AUTH_USER_MODEL = 'users.User'
