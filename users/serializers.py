@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from accounts.models import Account
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -15,4 +16,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password']
         )
+
+        Account.objects.create(
+            user=user
+        )
+
         return user
