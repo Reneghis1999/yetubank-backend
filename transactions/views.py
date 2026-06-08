@@ -11,7 +11,15 @@ from rest_framework import status
 from accounts.models import Account
 from users.models import User
 from .models import Transaction
-from .serializers import TransferSerializer
+from .serializers import (
+    TransferSerializer,
+    TransactionSerializer
+)
+
+
+
+from rest_framework import generics
+from django.db.models import Q
 
 
 class TransferView(APIView):
@@ -63,3 +71,19 @@ class TransferView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+
+
+
+
+class TransactionListView(generics.ListAPIView):
+    serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_account = Account.objects.get(user=self.request.user)
+
+        return Transaction.objects.filter(
+            Q(from_account=user_account) |
+            Q(to_account=user_account)
+        ).order_by('-created_at')
