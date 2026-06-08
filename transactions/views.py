@@ -22,6 +22,10 @@ from rest_framework import generics
 from django.db.models import Q
 
 
+
+from django.db.models import Sum
+
+
 class TransferView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -87,3 +91,36 @@ class TransactionListView(generics.ListAPIView):
             Q(from_account=user_account) |
             Q(to_account=user_account)
         ).order_by('-created_at')
+    
+
+
+
+class DashboardStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        account = Account.objects.get(user=request.user)
+
+        total_sent = Transaction.objects.filter(
+            from_account=account
+        ).aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        total_received = Transaction.objects.filter(
+            to_account=account
+        ).aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        transaction_count = Transaction.objects.filter(
+            Q(from_account=account) |
+            Q(to_account=account)
+        ).count()
+
+        return Response({
+            "balance": account.balance,
+            "total_sent": total_sent,
+            "total_received": total_received,
+            "transaction_count": transaction_count
+        })
