@@ -1,4 +1,6 @@
  YetuBank Backend
+ <img width="1919" height="875" alt="Capture d&#39;écran 2026-06-02 131024" src="https://github.com/user-attachments/assets/1a0975d3-c669-4494-936d-ac89134041ee" />
+
 
 Backend API de YetuBank — une plateforme fintech moderne développée avec Django REST Framework.
 
